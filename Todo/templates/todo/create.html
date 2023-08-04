@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Nội Dung Học Tập{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-todo %}active{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Tên nội dung: </label>
+                <input type="text" name="taskTitle" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="detail">Mô tả: </label>
+                <input type="text" name="taskDetail"id="detail" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Tạo</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Nội Dung Học Tập{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-todo %}active{% endblock %}
+
+{% block content %}
+<h3>Chỉnh sửa task: {{ task.title }}</h3>
+<div class="text-muted">Hoàn thành:
+<div>
+    {% if task.is_finished == True %} <i class="fas fa-check" style="color:rgb(91, 255, 91)"></i></div>
+    <form method="post" >
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" name="is_finished" value="false">Chưa Hoàn Thành</button>
+    </form>
+    {% else %}
+    <i class="fas fa-times" style="color:rgb(255, 91, 91)"></i></div>
+    <form method="post" >
+        {% csrf_token %}
+        <button class="btn btn-success my-2" type="submit" name="is_finished" value="true">Xác nhận hoàn thành</button>
+    </form>
+    {% endif %}
+    <form method="post" class=custom-form>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Tên: </label>
+            <input type="text" name="taskTitle" value="{{task.title}}" id="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="detail">Mô tả: </label>
+            <input type="text" name="taskDetail" value="{{task.detail}}" id="detail" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+</div>
+{% endblock %}

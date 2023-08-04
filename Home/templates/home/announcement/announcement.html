@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{announcement.title}}{% endblock %}
+{% block nav-about-drop %}active{% endblock %}
+{% block nav-announcement %}active{% endblock %}
+
+{% block css %}
+<style>
+    .content-img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="card mt-3">
+        <div class="card-body">
+        <h5 class="card-title">{{announcement.title|capfirst}}</h5>
+        <p class="card-text">Đăng bởi: {{announcement.author}}</p>
+        <p class="card-text">Ngày đăng: {{announcement.created_at|date:"d/m/Y"}}</p>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-body">
+            {{announcement.content|safe}}
+        </div>
+    </div>
+  
+{% endblock %}

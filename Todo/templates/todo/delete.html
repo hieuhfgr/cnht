@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}To Do{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-todo %}active{% endblock %}
+
+{% block content %}
+    <h3>Xóa To Do: {{task.title}}</h3>
+    <p class="bold">Bạn chắc chắn muốn xóa chứ?</p>
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Xóa</button>
+    </form>
+    <a href="/todo/detail/{{task.id}}" class="btn btn-primary">Quay Lại</a>
+{% endblock %}

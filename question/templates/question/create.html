@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block title %}Hỏi Đáp - Tạo Mới{% endblock %}
+{% block nav-qna-drop %}active{% endblock %}
+{% block nav-qna-create %}active{% endblock %}
+{% load static %}
+
+{% block content %}
+    <h3><i class="fas fa-comments"></i> Hỏi Đáp</h3>
+    {% if is_success == True %}
+        <h6>Câu hỏi của bạn đang chờ phê duyệt</h6>
+    {% else %}
+    <form method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <button type="submit" class="btn btn-success">Hỏi</button>
+    </form>
+    {% endif %}
+{% endblock %}

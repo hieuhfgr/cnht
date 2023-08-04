@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh Sửa Hỏi Đáp{% endblock %}
+{% block nav-qna-drop %}active{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h3 class="card-title">Chỉnh sửa: <a href="/question/detail/{{post.id}}">{{post.title|capfirst}}</a></h3>
+        <h5 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | <i class="far fa-clock"></i> {{post.createdAt|date:"d/m/Y"}}</h5>
+    </div>
+</div>
+<form method="post">
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Chỉnh sửa hỏi đáp</h4>
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Lưu</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block sidebar %}
+<div class="alert alert-danger" role="alert">
+    <h4>Xóa hỏi đáp</h4>
+    <p><i>(Hoạt động này không thể hoàn tác!)</i></p>
+    <a class="btn btn-danger" href="delete">Xóa bài viết</a>    
+</div>
+{% endblock %}

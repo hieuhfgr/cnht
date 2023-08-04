@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Nội Dung Học Tập{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-todog %}active{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h3>{{ task.title }} 
+        {% if task.user == request.user %} 
+        <a href="/todo/g/detail/{{task.id}}/change" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> chỉnh sửa</a>
+        {% endif %}
+    </h3> 
+    <p class="text-muted">{{ task.created_at|date:"G:i d/m/Y" }}</p>
+    <ul class="list-group mb-3">
+        {% if task.detail %}<li class="list-group-item"><b>Nội dung</b>: {{task.detail}}</li> {% endif %}
+        <li class="list-group-item"><b>Đã hoàn thành</b>: {% if task.is_finished == True %} <i class="fas fa-check" style="color:rgb(91, 255, 91)"></i> {% else %}<i class="fas fa-times" style="color:rgb(255, 91, 91)"></i>{% endif %}</li>
+        <li class="list-group-item"><b>Danh sách người dùng tham gia công việc</b>: 
+            <b>
+                {% for user in task.access_user %}
+                <a href="/profile/detail/{{user}}" target="_blank">{{user}}</a> 
+                {% endfor %}
+            </b>
+        </li>
+    </ul>
+    {% if task.user == request.user %} 
+        {% if task.is_finished == False %}
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-success my-2" type="submit" name="is_finished" value="true">Xác nhận hoàn thành</button>
+        </form>
+        {% endif %}
+        <a href="delete" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Xóa</a>
+    {% endif %}
+</div>
+{% endblock %}

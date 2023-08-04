@@ -1,0 +1,20 @@
+{% extends 'base1.html' %}
+{% block title %}Đăng Nhập{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <div class="card mt-3">
+    <div class="card-body">
+      <h2 class="card-title">Đăng Nhập</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col">
+            {{ form|crispy }}
+          </div>
+        </div>
+
+        <button class="btn btn-success" type="submit">Đăng nhập</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

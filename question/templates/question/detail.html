@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Hỏi Đáp{% endblock %}
+{% block nav-qna-drop %}active{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% if post.is_verified == False %}
+    <div class="alert alert-primary" role="alert">Hỏi đáp của bạn đang chờ phê duyệt! Bạn có thể xem preview ở bên dưới</div>
+    {% else %}
+        {% if post.is_published == False %}
+        <div class="alert alert-danger" role="alert">Hỏi đáp của bạn không được duyệt!</div>
+        {% endif %}
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{post.title|capfirst}}</h3>
+            <h5 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | <i class="far fa-clock"></i> {{post.createdAt|date:"d/m/Y"}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+                <i class="far fa-comment"></i> {{post.comment_count}}
+            </h6>
+        </div>
+    </div>
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            {{post.content|safe}}
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+          <h5 class="card-title">Câu trả lời</h5>
+          {% if not is_user_posted_answer and request.user != post.author and post.is_open and not post.is_finished %} 
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-2">
+                  <h6 class="card-title"><a href="/profile/detail/{{request.user}}">{{request.user}}</a></h6>
+                </div>
+                <div class="col-md-10">
+                  <form method="post">
+                    {% csrf_token %}
+                    {{ answerForm | crispy }}
+                    <button type="submit" class="btn btn-primary">Trả Lời</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          {% for ans in answers %}
+          {% if not is_user_posted_answer and request.user == ans.user %} 
+          {% else %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-2">
+                  <h6 class="card-title"><a href="/profile/detail/{{ans.user}}">{{ans.user}}</a></h6>
+                  <a href="/question/answer/{{ans.id}}" class="btn btn-sm btn-primary mb-1">xem</a>
+                  {% if ans.user == request.user and not has_correct_answer and post.is_open %}
+                  <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="answer_action" value="change" class="btn btn-primary btn-sm">chỉnh sửa</button>
+                    <button type="submit" name="answer_action" value="delete" class="btn btn-danger btn-sm mt-1">xóa</button>
+                  </form>
+                  {% endif %}
+                  {% if request.user == post.author and not has_correct_answer %} 
+                  <form method="post">
+                    {% csrf_token %} 
+                    <button type="submit" name="correct_answer" value="{{ans.id}}" class="mt-1 btn btn-success btn-sm"><i class="fas fa-check-circle"></i></button>
+                  </form>
+                  {% endif %}
+
+                </div>
+                <div class="col-md-8">
+                  <p class="card-text">{{ans.content|safe}}</p>
+                </div>
+                <div class="col-md-2 text-right">
+                    <div class="card-subtitle mb-2">
+                        <form method="post" class="form-inline">
+                            {% csrf_token %}
+                            <div class="btn-group mr-2">
+                                <button name="answer-vote" value="{{ans.id}}-like" type="submit" class="btn btn-success"><i class="fas fa-caret-up"></i> {{ans.NumberOfLike}}</button>
+                                <button name="answer-vote" value="{{ans.id}}-dislike" type="submit" class="btn btn-danger ml-1"><i class="fas fa-caret-down"></i> {{ans.NumberOfDislike}}</button>
+                            </div>
+                        </form>
+                      {% if ans.is_correct == True %}
+                      <small>Câu trả lời <i class="fas fa-check-circle" style="color:green"></i></small>
+                      {% endif %}
+                      <small class="text-muted">{{ans.createdAt|date:"d/m/Y"}}</small>
+                    </div>
+                  </div>
+                  
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% empty %} 
+          <p><i>Chưa có người dùng nào trả lời câu hỏi.</i></p>
+          {% endfor %}
+        </div>
+      </div>      
+{% endblock %}
+
+{% block sidebar %} 
+  {% if own_post == True %}
+          <a href="/question/detail/{{post.id}}/change" class="btn btn-primary mb-3">Chỉnh sửa bài viết</a>
+  {% endif %}
+  <div class="card">
+      <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-info"></i> Thông Tin Hỏi Đáp</h5>
+          <h6 class="card-subtitle mb-2 text-muted">
+          <div class="list-group bold">
+              <p class="list-group-item list-group-item-action">Trạng Thái: {% if post.is_open %}Mở <i class="fas fa-unlock" style="color: green;"></i>
+              {% else %}Đóng <i class="fas fa-lock" style="color: red;"></i>{% endif %}</p>
+              <p class="list-group-item list-group-item-action">Đã có kết quả chính xác: {% if not post.is_finished %}<i class="fas fa-circle" style="color: red;"></i>
+              {% else %}<i class="fas fa-check-circle" style="color: green;"></i>{% endif %}</p>
+              <!-- vote -->
+              
+              {% if post.is_verified == True and post.is_published == True %} 
+              <div class="list-group-item list-group-item-action">
+                  <form method="post">
+                      {% csrf_token %}
+                      {% if last_voted == 'none' %}
+                      <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                          <i class="fas fa-thumbs-up"></i>
+                      </button>
+                      {{interactiveUsersCount}}
+                      <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                          <i class="fas fa-thumbs-down"></i>
+                      </button>
+                      {% endif %}
+                      {% if last_voted == 'like' %}
+                      <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                          <i style="color:#4d40ff" class="fas fa-thumbs-up"></i>
+                      </button>
+                      {{interactiveUsersCount}}
+                      <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                          <i class="fas fa-thumbs-down"></i>
+                      </button>
+                      {% endif %}
+                      {% if last_voted == 'dislike' %}
+                      <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                          <i class="fas fa-thumbs-up"></i>
+                      </button>
+                      {{interactiveUsersCount}}
+                      <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                          <i style="color:#ff4040" class="fas fa-thumbs-down"></i>
+                      </button>
+                      {% endif %}
+                  </form>
+              </div>
+              {% endif %}
+          </div>
+          </h6>
+    </div>
+  </div>
+{% endblock %}

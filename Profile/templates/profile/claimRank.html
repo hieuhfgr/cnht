@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Hồ Sơ - Nhận Hạng{% endblock %}
+{% block nav-profile-drop %}active{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <h4 class="mb-3">Nhận hạng của bạn</h4>
+    {% if isClaimed == False %} 
+        <div class="ml-3">
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Claim</button>
+            </form>
+        </div>
+    {% else %}
+        <h6>{{rank|safe}}</h6>
+        <p>Cảm ơn bạn đã đóng góp cho chúng tôi. Mong bạn <i>"keep it going"</i> nhé!</p>
+    {% endif %}
+</div>
+{% endblock %}

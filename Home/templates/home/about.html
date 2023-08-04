@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Về Trang Web{% endblock %}
+{% block nav-about-drop %}active{% endblock %}
+{% block nav-about %}active{% endblock %}
+
+{% block content %}
+    <q><i>Một nơi mà các bạn học sinh và thầy cô trên cả nước chia sẻ những bài viết, tài liệu, phương pháp học cho nhau.</i></q>
+    <h3><i class="fas fa-info-circle"></i> Giới thiệu chung</h3>
+    <p>Đây là trang web phi lợi nhuận (hoàn toàn miễn phí). Nơi mà mọi người chia sẻ những tài liệu, phương pháp học, bài kiểm tra,... để các bạn học sinh trên cả nước cùng nhau học tập và cùng nhau tiến bộ.</p>
+    <h3><i class="fas fa-bullseye"></i> Mục đích</h3>
+    <ul>
+        <li>Chia sẻ</li>
+        <li>Học tập</li>
+        <li>Tiến bộ</li>
+    </ul>
+    <p>Trên đây là 3 mục đích chính mà CungNhauHocTap đang hướng đến các bạn học sinh.</p>
+    <h3><i class="fas fa-cog"></i> Cách hoạt động</h3>
+    <p>Trang web chứa 2 mục chính:</p>
+    <ul>
+        <li>Mục dành cho các bạn học sinh, thầy cô đăng bài chia sẻ về tài liệu học, các bài kiểm tra</li>
+        <ul>
+            <li><a href="/p/hoc_tap/">Kiến Thức</a>: Mục chứa những bài viết về chia sẻ những tài liệu như môn Toán, Ngữ Văn, Tiếng Anh,...</li>
+            <li><a href="/p/kiem_tra/">Kiểm Tra</a>: Mục chứa những bài kiểm tra mà các bạn học sinh có thể làm, nộp bài và biết được số câu đúng của mình.</li>
+            <li><a href="/question">Hỏi Đáp</a>: Nơi mà các bạn có thể hỏi những câu hỏi về chủ đề liên quan đến học tập.</li>
+        </ul>
+        <li>Mục dành cho những chức khác</li>
+        <ul>
+            <li><a href="/free-class/">Lớp Học Miễn Phí</a>: Là nơi tổng hợp các lớp livestream, online miễn phí của những thầy cô trên mạng.</li>
+            <li><a href="/todo/">To Do</a>: Giúp bạn kiểm soát công việc về học tập tốt hơn.</li>
+        </ul>
+    </ul>
+    <p>Ngoài ra, trang web còn hỗ trợ tính năng hồ sơ - Nơi mà các bạn có thể giới thiệu như bạn muốn.</p>
+    <h3><i class="fas fa-question-circle"></i> Các câu hỏi thường gặp</h3>
+    <p><a href="/about/faq">Các câu hỏi thường gặp</a></p>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Bài Kiểm Tra{% endblock %}
+{% block nav-hoctap-drop %}active{% endblock %}
+
+
+{% block content %}
+    {% if test.is_verify == False %}
+    <div class="alert alert-primary" role="alert">Bài viết của bạn đang chờ phê duyệt! Bạn có thể xem preview ở bên dưới</div>
+    {% else %}
+        {% if test.is_publish == False %}
+        <div class="alert alert-danger" role="alert">Bài viết của bạn không được duyệt!</div>
+        {% endif %}
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{test.title|capfirst}}</h3>
+            <h5 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <a href="/profile/detail/{{test.author}}">{{test.author}}</a> | <i class="far fa-clock"></i> {{test.createdAt|date:"d/m/Y"}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-tag"></i> Tags:
+                {% for key, value in test.tags.items %} 
+                    <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                không có tag
+                {% endfor %} 
+            </h6>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-trophy"></i> <a href="topscore">Bảng xếp hạng</a></h6>
+        </div>
+    </div>
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            {{test.content|safe}}
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+{% if is_finished == False %}
+    {% if own_post == True and test.is_publish == True %}
+    <a href="/p/kiem_tra/p/{{test.test_id}}/change" class="btn btn-primary mb-3">Chỉnh sửa bài viết</a>
+    {% endif %}
+        <div class="card bold">
+            <div class="card-body shadow">
+                <h5 class="card-title"><i class="fas fa-paper-plane"></i> Nộp đáp án</h5>
+                <form method="post">    
+                    {% csrf_token %}
+                    {% for question in test.correctAnswers %}
+                    <label class="card-title">{{forloop.counter}}:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="question{{forloop.counter}}" id="inlineRadio1" value="a" required>
+                                <label class="form-check-label" for="inlineRadio1">A</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="question{{forloop.counter}}" id="inlineRadio2" value="b" required>
+                                <label class="form-check-label" for="inlineRadio2">B</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="question{{forloop.counter}}" id="inlineRadio3" value="c" required>
+                                <label class="form-check-label" for="inlineRadio3">C</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="question{{forloop.counter}}" id="inlineRadio4" value="d" required>
+                                <label class="form-check-label" for="inlineRadio4">D</label>
+                            </div>    
+                    <br>                    
+                    {% endfor %}
+                    <button type="submit" class="btn btn-sm btn-success">Nộp</button>
+                </form>
+            </div>
+        </div>
+        
+        {% else %}
+            <div class="card mt-3 bold">
+                <div class="card-body shadow">
+                    <h5 class="card-title">Kết quả của bạn: {{correctCount}}/{{test.NumberOfQuestions}}</h5>
+                    
+                    <div class="list-group">
+                        {% for item in wrongAnswers %}
+                        <div class="list-group-item list-group-item-action">{{item|safe|linebreaks}}</div>
+                        {% endfor %}
+                    </div>
+                    <p class="card-subtitle mt-2 text-muted">{{message}}</p>
+                </div>
+            </div>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Hỏi Đáp{% endblock %}
+{% block nav-qna-drop %}active{% endblock %}
+{% block nav-qna-home %}active{% endblock %}
+{% load static %}
+
+{% block content %}
+<h3><i class="fas fa-comments"></i> Hỏi Đáp</h3>
+
+<div class="row">
+{% for post in questions %}
+<div class="col-lg-12 col-md-12">
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title"><a href="/question/detail/{{ post.id }}">{{ post.title }}</a></h2>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+                <i class="far fa-comment"></i> {{post.comment_count}}
+            </h6>
+            <a href="/question/detail/{{post.id }}" class="btn btn-sm btn-primary">Xem</a>
+        </div>
+        <div class="card-footer text-muted border-top-0">
+          <div class="row">
+            <div class="col-4">
+              <p class="m-0"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a></p>
+              <p class="m-0"><i class="fas fa-calendar-alt"></i> {{post.createdAt|date:"d/m/Y"}}</p>
+            </div>
+            <div class="col-8">
+              <div class="d-flex justify-content-end">
+                <p class="m-0 mr-2"></i>{% if post.is_open %}<i class="fas fa-unlock" style="color: green;"></i>
+                  {% else %}<i class="fas fa-lock" style="color: red;"></i>{% endif %} Trạng Thái: {% if post.is_open %}Mở{% else %}Đóng{% endif %}</p>
+                <p class="m-0">{% if not post.is_finished %}<i class="fas fa-circle" style="color: red;"></i>
+                  {% else %}<i class="fas fa-check-circle" style="color: green;"></i>{% endif %} Đã có kết quả chính xác: {% if post.is_finished %}Có{% else %}Không{% endif %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<div class="mt-3">
+  {% if questions.has_other_pages %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% if questions.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ questions.previous_page_number }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Trang Trước</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for i in questions.paginator.page_range %}
+        {% if questions.number == i %}
+          <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(hiện tại)</span></a></li>
+        {% else %}
+          {% if questions.number <= 3 and i <= 5 %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}">{{ i }}</a></li>
+          {% elif questions.number > 3 and i >= questions.number|add:"-2" and i <= questions.number|add:"2" %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}">{{ i }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% if questions.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ questions.next_page_number }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Trang Tiếp</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+<div class="card bold mb-3">
+  <div class="card-body shadow">
+      <h5 class="card-title"><i class="fas fa-filter"></i> Bộ Lọc</h5>
+      <form method="get" id="view-mode-form">
+        <div class="form-group">
+          <label for="sort-by">Sắp xếp theo:</label>
+          <select class="form-control" id="sort-by" name="sort_by">
+            <option value="date_newest">Ngày đăng (mới nhất)</option>
+            <option value="date_oldest">Ngày đăng (cũ nhất)</option>
+            <option value="open">Trạng thái mở</option>
+            <option value="close">Trạng thái đóng</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Xem</button>
+      </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/viewMode1.js' %}"></script>
+{% endblock %}

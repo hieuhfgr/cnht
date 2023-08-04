@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Câu Hỏi Thường Gặp{% endblock %}
+{% block nav-about-drop %}active{% endblock %}
+{% block nav-faq %}active{% endblock %}
+
+{% block content %}
+    <h3><i class="fas fa-question-circle"></i> Một số câu hỏi thường gặp: </h3>
+    {% for faq in faqs %}
+    <div class="card mb-3">
+        <div class="card-body">
+        <h5 class="card-title">{{faq.title|capfirst}}</h5>
+        <p class="card-text">{{faq.content|safe}}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

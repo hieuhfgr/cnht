@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Đội Ngũ{% endblock %}
+{% block nav-about-drop %}active{% endblock %}
+{% block nav-team %}active{% endblock %}
+{% block css %}
+<style>
+    .avatar {
+        max-width: 8em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h3><i class="fas fa-users"></i> Đội Ngũ</h3>
+<div class="row">
+    {% for adminUser in AdminUsers %}
+    <div class="col-md-4 mb-2">
+        <div class="card">
+            <div class="text-center">
+                <img class="avatar card-img-top" src="/media/{{adminUser.avatar}}" alt="{{adminUser.name}}">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title"><a href="/profile/detail/{{adminUser.user}}">{{adminUser.user}}</a> - {{adminUser.get_role_display}}</h5>
+                <p class="card-text">{{adminUser.description}}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

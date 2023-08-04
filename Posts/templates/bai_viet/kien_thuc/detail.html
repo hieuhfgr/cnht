@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Bài Viết{% endblock %}
+{% block nav-hoctap-drop %}active{% endblock %}
+{% block content %}
+    {% if post.is_verify == False %}
+    <div class="alert alert-primary" role="alert">Bài viết của bạn đang chờ phê duyệt! Bạn có thể xem preview ở bên dưới</div>
+    {% else %}
+        {% if post.is_publish == False %}
+        <div class="alert alert-danger" role="alert">Bài viết của bạn không được duyệt!</div>
+        {% endif %}
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">{{post.title|capfirst}}</h3>
+            <h5 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | <i class="far fa-clock"></i> {{post.createdAt|date:"d/m/Y"}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-tag"></i> Tags:
+                {% for key, value in post.tags.items %} 
+                    <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                không có tag
+                {% endfor %} 
+            </h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <div class="row">
+                    <div class="col-8 text-left">
+                        <i class="far fa-eye"></i> lượt xem {{ post.NumberOfSeen }}
+                    </div>
+                    <div class="col-4 text-right">
+                        <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                        <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+                    </div>
+                  </div>
+            </h6>
+        </div>
+    </div>
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            {{post.content|safe}}
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %} 
+    {% if own_post == True %}
+        <a href="/p/hoc_tap/p/{{post.post_id}}/change" class="btn btn-primary mb-3">Chỉnh sửa bài viết</a>
+    {% endif %}
+    {% if post.is_verify == True and post.is_publish == True %} 
+    <div class="card mb-3">
+        <div class="card-body text-center">
+            <form method="post">
+                {% csrf_token %}
+                {% if last_voted == 'none' %}
+                <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+                {{interactiveUsersCount}}
+                <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+                {% endif %}
+                {% if last_voted == 'like' %}
+                <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                    <i style="color:#4d40ff" class="fas fa-thumbs-up"></i>
+                </button>
+                {{interactiveUsersCount}}
+                <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+                {% endif %}
+                {% if last_voted == 'dislike' %}
+                <button type="submit" name="vote" value="like" class="btn btn-light mr-2">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+                {{interactiveUsersCount}}
+                <button type="submit" name="vote" value="dislike" class="btn btn-light ml-2">
+                    <i style="color:#ff4040" class="fas fa-thumbs-down"></i>
+                </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

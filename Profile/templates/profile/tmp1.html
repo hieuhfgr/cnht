@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Hồ Sơ Của Tôi{% endblock %}
+{% block nav-profile-drop %}active{% endblock %}
+{% block nav-my-profile %}active{% endblock %}
+
+{% block content %}
+    <center><h3 class="mb-3 mt-3">Thông tin của <i>{{user.name}}</i></h3></center>
+    <div class="row">
+        <div class="col-sm-7 ml-5">
+            <h3>Thông tin cá nhân</h3>
+            <div class="ml-4">
+                <h4>{{user.name}}</h4>
+                <h5>@{{user.username}}</h5>
+                <ul>
+                    <li>vai trò: {{user.get_role_display}}</li>
+                    <li>Tài khoản thành lập vào: {{user.createdAt|date:"d/m/Y"}}</li>
+                </ul>
+                <h5>about:</h5>
+                <div class="ml-4">
+                    {{user.about|linebreaks}}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            {% if user.NumberOfPosts != 0 %}
+                <h3>Các bài viết đã đăng:</h3>
+                <table class="table table-sm table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <td>Bài Viết</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                            {% if post.is_verify == True %}
+                                <tr>
+                                    <td><a href="/hoctap/baiviet/{{post.post_id}}">{{post.title|capfirst}}</a></td>
+                                    <td>{{post.createdAt|date:'d/m/Y'}}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

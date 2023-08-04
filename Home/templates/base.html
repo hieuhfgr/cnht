@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cùng Nhau Học Tập - {% block title %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/icon-website.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/base4.css' %}">
+    <link rel="stylesheet" href="{% static 'css/UI3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme1.css' %}">
+    {% block css %}{% endblock %}
+</head>
+<body> 
+  <header class="header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6 col-md-1">
+          <a href="/">
+            <img src="{% static 'images/logo1.png' %}" alt="Logo" class="logo">
+          </a>
+        </div>
+
+        <div class="col-6 col-md-11 text-right d-flex align-items-center justify-content-end">
+          <div class="btn-group bold">
+
+            <a href="/profile/notification" class="btn btn-unstyled mr-2">
+              <i class="fas fa-bell"></i>
+            </a>
+            
+            <a href="/todo" class="btn btn-unstyled mr-2">
+              <i class="fas fa-list"></i>
+            </a>
+            
+            <div class="dropdown bold ml-auto mr-2">
+              <a class="btn dropdown-toggle" href="#" role="button" id="configDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-cog"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right animate__animated animate__fadeInUp" aria-labelledby="configDropdown">
+                <button class="btn btn-primary m-3" type="button" id="theme-toggle">
+                  <i class="fas fa-exchange-alt"></i> Đổi Theme
+                </button>
+              </div>
+            </div>  
+
+            {% if user.username %}
+            <div class="dropdown bold ml-auto">
+                <a class="btn dropdown-toggle" href="#" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user"></i> {{ user.username }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="/profile/detail/{{ user.username }}"><i class="fas fa-user"></i> Hồ sơ</a>
+                    <a class="dropdown-item" href="/profile/change"><i class="fas fa-user-edit"></i> Chỉnh sửa hồ sơ</a>
+                    <a class="dropdown-item" href="/profile/setting"><i class="fas fa-cog"></i> Cài đặt</a>
+                    <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                </div>
+            </div>
+            {% else %}
+            <div class="ml-auto">
+                <a href="/login" class="btn btn-sm btn-outline-secondary mr-2 mt-1 mb-1">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                </a>
+                <a href="/register" class="btn btn-sm btn-outline-secondary mr-2 mt-1 mb-1">
+                    <i class="fas fa-user-plus"></i> Đăng Kí
+                </a>
+            </div>
+            {% endif %}
+          </div>
+      </div>
+      </div>
+    </div>
+  </header>
+  
+  <nav class="navbar navbar-expand-lg navbar-center navbar-light">
+    <div class="container-fluid">      
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item {% block nav-home %}{% endblock %}">
+                <a class="nav-link " href="/">Trang Chủ</a>
+              </li>
+        
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle {% block nav-about-drop %}{% endblock %}" href="/about" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Giới Thiệu
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {% block nav-about %}{% endblock %}" href="/about">Về Trang Web</a>
+                    <a class="dropdown-item {% block nav-announcement %}{% endblock %}" href="/announcement">Thông Báo</a>
+                    <a class="dropdown-item {% block nav-team %}{% endblock %}" href="/about/team">Đội Ngũ</a>
+                    <a class="dropdown-item {% block nav-faq %}{% endblock %}" href="/about/faq">Câu Hỏi Thường Gặp</a>
+                    <a class="dropdown-item {% block nav-support %}{% endblock %}" href="/about/support">Hỗ Trợ</a>
+                  </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle {% block nav-hoctap-drop %}{% endblock %}" href="/p" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tài Liệu
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {% block nav-hoctap-post %}{% endblock %}" href="/p/hoc_tap">Học Tập - Trang Chủ</a>
+                    <a class="dropdown-item {% block nav-hoctap-post-search %}{% endblock %}" href="/p/hoc_tap/search">Học Tập - Tìm Kiếm</a>
+                    <a class="dropdown-item {% block nav-hoctap-post-create %}{% endblock %}" href="/p/hoc_tap/create">Học Tập - Tạo Mới</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item {% block nav-hoctap-test %}{% endblock %}" href="/p/kiem_tra">Kiểm Tra - Trang Chủ</a>
+                    <a class="dropdown-item {% block nav-hoctap-test-search %}{% endblock %}" href="/p/kiem_tra/search">Kiểm Tra - Tìm Kiếm</a>
+                    <a class="dropdown-item {% block nav-hoctap-test-create %}{% endblock %}" href="/p/kiem_tra/create">Kiểm Tra - Tạo Mới</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item {% block nav-hoctap-tag %}{% endblock %}" href="/p/hoc_tap/tag">Tag - Trang Chủ</a>
+                  </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle {% block nav-qna-drop %}{% endblock %}" href="/question" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hỏi Đáp
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {% block nav-qna-home %}{% endblock %}" href="/question">Hỏi Đáp - Trang Chủ</a>
+                    <a class="dropdown-item {% block nav-qna-search %}{% endblock %}" href="/question/search">Hỏi Đáp - Tìm Kiếm</a>
+                    <a class="dropdown-item {% block nav-qna-create %}{% endblock %}" href="/question/create">Hỏi Đáp - Tạo Mới</a>
+                  </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle {% block nav-profile-drop %}{% endblock %}" href="/profile/detail/{{ user.username }}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hồ Sơ
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item {% block nav-myprofile-user %}{% endblock %}" href="/profile/my">Hồ Sơ Của Tôi</a>
+                    <a class="dropdown-item {% block nav-search-user %}{% endblock %}" href="/profile/search">Tìm Kiếm người Dùng</a>
+                    <a class="dropdown-item {% block nav-activemember %}{% endblock %}" href="/profile/topusers">Top Thành Viên</a>
+                  </div>
+                </li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle {% block nav-hoctap-other-drop %}{% endblock %}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Khác
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item {% block nav-hoctap-todo %}{% endblock %}" href="/todo/">To Do (Cá Nhân)</a>
+                  <a class="dropdown-item {% block nav-hoctap-todog %}{% endblock %}" href="/todo/g">To Do (Nhóm)</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item {% block nav-hoctap-class %}{% endblock %}" href="/free-class">Lớp Học Miễn Phí</a>
+                  <!-- <div class="dropdown-divider"></div>
+                  <a class="dropdown-item {% block nav-hoctap-chatgpt %}{% endblock %}" href="/chat-gpt/">Hỏi ChatGPT</a> -->
+                </div>
+              </li>
+
+            </ul>
+        </div>
+    </div>
+  </nav>
+  
+  <div class="container mt-3">
+      <div class="row">
+          <div class="col-lg-9 col-md-12">
+              {% block content %}
+              {% endblock %}
+          </div>
+
+          <div class="col-md-12 d-none d-md-block d-lg-none">
+            <hr>
+          </div>
+
+          <div class="col-lg-3 col-md-12">
+              {% block sidebar %} 
+              {% endblock %}
+              <div class="card mt-3 bold">
+                  <div class="card-body shadow">
+                      <h5 class="card-title"><i class="fas fa-info"></i> Thông Tin Website</h5>
+                      <div class="list-group">
+                          <div class="list-group-item list-group-item-action"><i class="fas fa-users"></i> có {{user_count}} tài khoản được tạo</div>
+                          <div class="list-group-item list-group-item-action"><i class="fas fa-pencil-alt"></i> có {{p_count}} bài viết được tạo</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <hr>
+  {% include 'footer.html' %}
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="{% static 'js/toggleTheme4.js' %}"></script>
+  {% block js %}{% endblock %}
+  </body>
+  </html>

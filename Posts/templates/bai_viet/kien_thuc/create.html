@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block title %}Viết Bài{% endblock %}
+{% block nav-hoctap-post-create %}active{% endblock %}
+{% block nav-hoctap-drop %}active{% endblock %}
+{% load static %}
+
+{% block content %}
+    <h3>Viết bài</h3>
+    {% if is_success == True %}
+        <h6>Bài viết của bạn đang chờ phê duyệt</h6>
+    {% else %}
+    <form method="post">
+        {% csrf_token %}
+        {{form|crispy}}
+        <div class="dropdown mb-3">
+            <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Tags
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for tag in tags %}
+                <div class="form-check">
+                    <input name="tags" class="form-check-input" type="checkbox" value="{{tag.0}}" id="{{tag.0}}">
+                    <label class="form-check-label" for="{{tag.0}}">
+                        {{tag.1}}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Đăng Bài Viết</button>
+    </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Tạo Kiểm Tra{% endblock %}
+{% block nav-hoctap-test-create %}active{% endblock %}
+{% block nav-hoctap-drop %}active{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h3>Tạo bài kiểm tra</h3>
+    {% if is_success == True %} 
+        <h6>Bài kiểm tra của bạn đang chờ phê duyệt</h6>
+    {% else %}
+      {% if num_of_questions == None %}
+        <form method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-primary">Gửi</button>
+        </form>
+      {% else %}
+        {% if message %}{{message}}{% endif %}
+          <form method="post"> 
+              {% csrf_token %}
+              {{form|crispy}}
+              {% if not correct_ans %}
+              <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="card-title mt-3">Nhập đáp án đúng</h6>
+                    {% for id in idListQuestion %}
+                      <label>Câu {{id}}:</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question{{id}}" id="inlineRadio1" value="a" required>
+                        <label class="form-check-label" for="inlineRadio1">A</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question{{id}}" id="inlineRadio2" value="b" required>
+                        <label class="form-check-label" for="inlineRadio2">B</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question{{id}}" id="inlineRadio3" value="c" required>
+                        <label class="form-check-label" for="inlineRadio3">C</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="question{{id}}" id="inlineRadio4" value="d" required>
+                        <label class="form-check-label" for="inlineRadio4">D</label>
+                      </div>
+                      <br>
+                    {% endfor %}
+                  </div>
+              </div>
+              {% else %}
+              <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="card-title mt-3">Đáp án đúng</h6>
+                    {% for key,value in correct_ans.items %}
+                      <label>Câu {{ forloop.counter }}:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="{{key}}" id="inlineRadio1" value="a" required {% if value == 'a' %}checked{% endif %}>
+                            <label class="form-check-label" for="inlineRadio1">A</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="{{key}}" id="inlineRadio2" value="b" required {% if value == 'b' %}checked{% endif %}>
+                            <label class="form-check-label" for="inlineRadio2">B</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="{{key}}" id="inlineRadio3" value="c" required {% if value == 'c' %}checked{% endif %}>
+                            <label class="form-check-label" for="inlineRadio3">C</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="{{key}}" id="inlineRadio4" value="d" required {% if value == 'd' %}checked{% endif %}>
+                            <label class="form-check-label" for="inlineRadio4">D</label>
+                        </div>
+                      <br>
+                    {% endfor %}
+                  </div>
+              </div>
+              {% endif %}
+              <div class="dropdown mb-3">
+                <button class="btn btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Tags
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for tag in tags %}
+                    <div class="form-check">
+                        <input name="tags" class="form-check-input" type="checkbox" value="{{tag.0}}" id="{{tag.0}}">
+                        <label class="form-check-label" for="{{tag.0}}">
+                            {{tag.1}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+              <button type="submit" class="btn btn-success">Đăng</button>
+          </form>
+      {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% if correct_ans %}
+<div class="card">
+  <div class="card-body">
+    <h6 class="card-title">Đáp án đúng</h6>
+      <div class="list-group">
+        {% for key,value in correct_ans.items %}
+          <div class="list-group-item list-group-item-action">{{key}}: {{value|capfirst}}</div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base1.html' %}
+{% block title %}Xác nhận Email{% endblock %}
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+  <h2>Xác nhận địa chỉ email của bạn</h2>
+  <p>Chúng tôi đã gửi một email xác nhận đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến và nhấn vào liên kết xác nhận để hoàn tất quá trình đăng ký.</p>
+  <p>Nếu bạn không nhận được email xác nhận, vui lòng kiểm tra hộp thư spam hoặc liên hệ với chúng tôi để được trợ giúp.</p>
+{% endblock %}

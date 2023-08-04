@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Tìm Kiếm Hồ Sơ{% endblock %}
+{% block nav-profile-drop %}active{% endblock %}
+{% block nav-search-user %}active{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Search Form -->
+<h3><i class="fas fa-search"></i> Tìm kiếm</h3>
+<div>
+    <form class="form-inline mb-3" method="get">
+        <input required name="username" class="form-control mr-sm-2" type="search" placeholder="Username Người Dùng" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Tìm Kiếm</button>
+    </form>
+    <p>(Lưu ý nhỏ là Username không có chứa dấu cách " " và chỉ chứa các từ trong bảng chữ cái tiếng Anh)</p>
+    {% if is_searching == True %}    
+        <a href="/profile/search">Quay lại tìm kiếm</a> 
+    {% endif %}
+</div>
+
+<!-- Display list -->
+{% if is_searching == True %} 
+<h3>Danh sách tìm thấy</h3>
+<div class="card-deck">
+    <div class="row">
+        {% for user in usersFound %} 
+        <div class="col-12">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h5 class="card-title">Username: {{ user.username }}</h5>
+                    <h5 class="card-title">Họ và tên: {{ user.last_name }} {{ user.first_name }}</h5>
+                    <a href="/profile/detail/{{user.username}}" class="btn btn-primary btn-sm">Xem hồ sơ</a>
+                </div>
+            </div>
+        </div>
+        {% empty %} <h6 class="card-title">Không tìm thấy người dùng!</h6>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

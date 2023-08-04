@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Chỉnh Sửa Hồ Sơ{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="mb-3">
+        <h4 class="mb-3">Chỉnh sửa hồ sơ</h4>
+        <div class="ml-3">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success">Lưu</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

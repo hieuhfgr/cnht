@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Nội Dung Học Tập{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-todog %}active{% endblock %}
+
+{% block content %}
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+        {{ error|safe }}    
+        </div>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Tên nội dung: </label>
+                <input type="text" name="taskTitle" id="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="detail">Mô tả: </label>
+                <input type="text" name="taskDetail"id="detail" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="users_added">Người dùng có quyền truy cập công việc: </label>
+                <input type="text" name="users" id="users_added" class="form-control" placeholder="Username của người dùng, được ngăn cách bằng dấu ',' " required>
+            </div>
+            <button type="submit" class="btn btn-primary">Tạo</button>
+    </form>
+{% endblock %}

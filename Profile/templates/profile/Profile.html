@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ User.name }}{% endblock %}
+{% block nav-profile-drop %}active{% endblock %}
+{% block nav-myprofile-user %}active{% endblock %}
+
+{% block content %}
+<h3 class="mb-3 mt-3">
+    <i class="fas fa-user"></i> Thông tin của {{User.name}}
+    {% if User.rank == 'A' %}
+    <i class="fas fa-medal" style="color: gold"></i>
+    {% elif User.rank == 'B' %}
+    <i class="fas fa-medal" style="color: silver"></i>
+    {% elif User.rank == 'C' %}
+    <i class="fas fa-medal" style="color: #cd7f32"></i>
+    {% endif %}
+</h3>
+
+<div class="card mb-3">
+  <div class="card-header">
+    Thông tin cá nhân
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{User.name}}</h5>
+    <p class="card-text"><i class="fas fa-user"></i> Tên tài khoản: {{User.user}}</p>
+    <p class="card-text"><i class="fas fa-user-tag"></i> Vai trò: {{User.get_role_display}}</p>
+    <p class="card-text">
+      {% if User.rank == 'A' %}
+      <i class="fas fa-medal" style="color: gold"></i>
+      {% elif User.rank == 'B' %}
+      <i class="fas fa-medal" style="color: silver"></i>
+      {% elif User.rank == 'C' %}
+      <i class="fas fa-medal" style="color: #cd7f32"></i>
+      {% else %}
+      <i class="fas fa-medal"></i>
+      {% endif %}
+      Hạng: {{User.get_rank_display}}
+    </p>
+    <p class="card-text"><i class="fas fa-clock"></i> Ngày tạo tài khoản: {{User.createdAt|date:"d/m/Y"}}</p>
+    <p class="card-text"><i class="fas fa-clipboard"></i> Số bài viết đã đăng: {{User.NumberOfPosts}}</p>
+    <p class="card-text"><i class="fas fa-circle"></i> Điểm: {{User.points}}</p>
+    <h5 class="card-title">Giới thiệu</h5>
+    <p class="card-text">{{User.about|linebreaks}}</p>
+  </div>
+</div>
+
+<h4><i class="fas fa-book"></i> Bài học tập đã đăng</h4>
+<div class="row">
+    {% for post in posts %}
+    <div class="col-md-4">
+      <div class="card mt-3">
+        <div class="card-body">
+          <h5 class="card-title"><a href="/p/hoc_tap/p/{{ post.post_id }}">{{ post.title }}</a></h5>
+          <h6 class="card-subtitle text-muted"><i class="fas fa-tag"></i> Tags:
+            {% for key, value in post.tags.items %}
+            <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% empty %}
+            không có tag
+            {% endfor %}
+          </h6>
+        </div>
+        <div class="card-footer text-muted border-top-0">
+            <p class="m-0"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a></p>
+            <p class="m-0"><i class="fas fa-calendar-alt"></i> {{post.createdAt|date:"d/m/Y"}}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p><i>Người dùng chưa đăng.</i></p>
+    {% endfor %}
+  </div>
+<h4><i class="fas fa-book mt-4"></i> Bài kiểm tra đã đăng</h4>
+  <div class="row">
+    {% for post in tests %}
+    <div class="col-md-4">
+      <div class="card mt-3">
+        <div class="card-body">
+          <h5 class="card-title"><a href="/p/kiem_tra/p/{{ post.test_id }}">{{ post.title }}</a></h5>
+          <h6 class="card-subtitle text-muted"><i class="fas fa-tag"></i> Tags:
+            {% for key, value in post.tags.items %}
+            <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+            {% if not forloop.last %}, {% endif %}
+            {% empty %}
+            không có tag
+            {% endfor %}
+          </h6>
+        </div>
+        <div class="card-footer text-muted border-top-0">
+          <p class="m-0"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a></p>
+          <p class="m-0"><i class="fas fa-calendar-alt"></i> {{post.createdAt|date:"d/m/Y"}}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p><i>Người dùng chưa đăng.</i></p>
+    {% endfor %}
+  </div>
+
+  <h4 class="mt-3"><i class="fas fa-comments"></i> Hỏi Đáp</h4>
+  <div class="row">
+    {% for post in questions %}
+    <div class="col-md-4">
+      <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title"><a href="/question/detail/{{ post.id }}">{{ post.title }}</a></h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+                <i class="far fa-comment"></i> {{post.comment_count}}
+            </h6>
+        </div>
+        <div class="card-footer text-muted border-top-0">
+            <p class="m-0"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a></p>
+            <p class="m-0"><i class="fas fa-calendar-alt"></i> {{post.createdAt|date:"d/m/Y"}}</p>
+        </div>
+    </div>
+    </div>
+    {% empty %}
+    <p><i>Người dùng chưa đăng.</i></p>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block sidebar %}
+{% if user.is_authenticated and is_own_profile == True %}
+<div class="card mt-3 bold">
+  <div class="card-body shadow">
+      <h5 class="card-title"><i class="fas fa-info-circle"></i> Quản Lí Tài Khoản</h5>
+      <div class="list-group">
+            <a class="list-group-item list-group-item-action" style="color: #007bff !important" href="/profile/change">Chỉnh sửa hồ sơ</a>
+            <a class="list-group-item list-group-item-action" style="color: #007bff !important" href="/profile/claimrank">Nhận thứ hạng</a>
+      </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

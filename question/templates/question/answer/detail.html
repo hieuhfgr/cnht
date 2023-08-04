@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Hỏi Đáp{% endblock %}
+{% block nav-qna-drop %}active{% endblock %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+<style>
+    .chat-messages {
+        max-height: 400px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    {% if post.is_verified == False %}
+    <div class="alert alert-primary" role="alert">Hỏi đáp của bạn đang chờ phê duyệt! Bạn có thể xem preview ở bên dưới</div>
+    {% else %}
+        {% if post.is_published == False %}
+        <div class="alert alert-danger" role="alert">Hỏi đáp của bạn không được duyệt!</div>
+        {% endif %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title"><a href="/question/detail/{{post.id}}">{{post.title|capfirst}}</a> <a href="/question/detail/{{post.id}}" class="btn btn-primary btn-sm">xem câu hỏi</a></h3>
+            <h5 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | <i class="far fa-clock"></i> {{post.createdAt|date:"d/m/Y"}}</h5>
+        </div>
+    </div>
+    <div class="card mt-2 mb-2">
+        <div class="card-body">
+            <h4 class="card-title">Câu trả lời của <a href="/profile/detail/{{ans.user}}">{{ans.user}}</a></h4>
+            <div class="row">
+                <div class="col-md-2">
+                    <small class="card-subtitle text-muted">{{ans.createdAt|date:"d/m/Y"}}</small>
+                    {% if ans.is_correct == True %}
+                    <br>
+                    <small class="text-muted card-subtitle">Câu trả lời <i class="fas fa-check-circle" style="color:green"></i></small>
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <p class="card-text">{{ans.content|safe}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+        <h5 class="card-title mb-0">Trao Đổi Hỏi Đáp</h5>
+        </div>
+        <div class="card-body">
+            <div class="chat-messages">
+                <ul class="list-group">
+                    {% for msg in messages %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div class="text-left">
+                                <strong>{{msg.user}}:</strong> {{msg.content}}
+                        </div>
+                        <div class="text-right">
+                            {{msg.createdAt|date:"H:i d/m/Y"}}
+                        </div>
+                    </li>
+                    {% empty %} 
+                    <li class="list-group-item d-flex justify-content-between"><i>chưa có tin nhắn!</i></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if ans.is_correct == False %}
+            <form method="post">
+                <div class="form-group mt-3">
+                    {% csrf_token %}
+                    {% if message != False %}{{message}}{% endif %}
+                    {{ form | crispy }}
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block sidebar %} 
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-info"></i> Thông Tin Hỏi Đáp</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <div class="list-group bold">
+                    <p class="list-group-item list-group-item-action">Trạng Thái: {% if post.is_open %}Mở <i class="fas fa-unlock" style="color: green;"></i>
+                    {% else %}Đóng <i class="fas fa-lock" style="color: red;"></i>{% endif %}</p>
+                    <p class="list-group-item list-group-item-action">Đã có kết quả chính xác: {% if not post.is_finished %}<i class="fas fa-circle" style="color: red;"></i>
+                    {% else %}<i class="fas fa-check-circle" style="color: green;"></i>{% endif %}</p>
+                    
+                </div>
+            </h6>
+        </div>
+    </div>
+{% endblock %}

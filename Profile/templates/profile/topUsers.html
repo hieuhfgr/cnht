@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Thành Viên Tích Cực{% endblock %}
+{% block nav-profile-drop %}active{% endblock %}
+{% block nav-activemember %}active{% endblock %}
+
+{% block content %}
+<table class="table table-sm table-striped table-bordered table-hover">
+    <h6>Top Thành Viên</h6>
+    <thead>
+        <tr>
+            <td class="text-center" style="width: 5%">#</td>
+            <td style="width: 30%">Tên truy cập</td>
+            <td style="width: 55%">Họ và Tên</td>
+            <td class="text-center" style="width: 10%">Số bài viết</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in topUsers %}
+            <tr>
+                <td class="text-center">{{ forloop.counter }}</td>
+                <td>
+                    <a href="/profile/detail/{{member.user}}">{{member.user}}</a>
+                    {% if member.rank == 'A' %} 
+                    <i class="fas fa-medal" style="color: gold"></i>
+                    {% elif member.rank == 'B' %}
+                    <i class="fas fa-medal" style="color: silver"></i>
+                    {% elif member.rank == 'C' %} 
+                    <i class="fas fa-medal" style="color: #cd7f32"></i>
+                    {% endif %}
+                </td>
+                <td>{{member.name}}</a></td>
+                <td class="text-center">{{member.NumberOfPosts}}</td>
+            </tr>
+        {% endfor %}  
+    </tbody>
+</table>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if topUsers.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ topUsers.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for page in topUsers.paginator.page_range %}
+            {% if topUsers.number == page %}
+                <li class="page-item active"><a class="page-link" href="#">{{ page }}</a></li>
+            {% elif page > topUsers.number|add:'-3' and page < topUsers.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if topUsers.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ topUsers.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}

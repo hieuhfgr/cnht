@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{class.title}}{% endblock %}
+{% block nav-hoctap-other-drop %}active{% endblock %}
+{% block nav-hoctap-class %}active{% endblock %}
+{% block css %}
+<style>
+    .content-img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{class.title|capfirst}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> {{class.author}} | <i class="far fa-clock"></i> {{class.createdAt|date:"d/m/Y"}}</h6>
+        <a href="{{class.link}}" class="card-link" target="_blank"><i class="fas fa-external-link-alt"></i> Link lớp học</a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Mô tả</h5>
+        <p class="card-text">{{ class.description|safe }}</p>
+    </div>
+</div>
+  
+  
+{% endblock %}

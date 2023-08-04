@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Bài Viết{% endblock %}
+{% block nav-hoctap-drop %}active{% endblock %}
+{% block nav-hoctap-post %}active{% endblock %}
+{% load static %}
+
+{% block content %}
+<h3><i class="fas fa-book"></i> Bài viết mới</h3>
+{% if is_tieu_diem == True %}
+{% for post in posts %}
+<div class="col-lg-12 col-md-12">
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title"><a href="/p/hoc_tap/p/{{ post.post_id }}">{{ post.title }}</a></h2>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-tag"></i> Tags:
+                {% for key, value in post.tags.items %}
+                <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+                {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                không có tag
+                {% endfor %}
+            </h6>
+            <a href="/p/hoc_tap/p/{{post.post_id}}" class="btn btn-sm btn-primary">Xem</a>
+        </div>
+        <div class="card-footer text-muted border-top-0 bold">
+          <div class="row">
+            <div class="col-8 text-left">
+                <i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | {{post.createdAt|date:"d/m/Y"}}
+            </div>
+            <div class="col-4 text-right">
+                <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="row">
+{% for post in posts %}
+<div class="col-lg-12 col-md-12">
+    <div class="card mt-3">
+        <div class="card-body">
+            <h2 class="card-title"><a href="/p/hoc_tap/p/{{ post.post_id }}">{{ post.title }}</a></h2>
+            <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-tag"></i> Tags:
+                {% for key, value in post.tags.items %}
+                <a href="/p/hoc_tap/tag/{{ key }}">{{ value }}</a>
+                {% if not forloop.last %}, {% endif %}
+                {% empty %}
+                không có tag
+                {% endfor %}
+            </h6>
+            <a href="/p/hoc_tap/p/{{post.post_id}}" class="btn btn-sm btn-primary">Xem</a>
+        </div>
+        <div class="card-footer text-muted border-top-0 bold">
+          <div class="row">
+            <div class="col-8 text-left">
+                <i class="fas fa-user"></i> <a href="/profile/detail/{{post.author}}">{{post.author}}</a> | {{post.createdAt|date:"d/m/Y"}}
+            </div>
+            <div class="col-4 text-right">
+                <i class="fas fa-caret-up"></i> {{post.NumberOfLike}}
+                <i class="fas fa-caret-down"></i> {{post.NumberOfDislike}}
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+
+<div class="mt-3">
+  <!-- Pagination with 5 consecutive numbers -->
+  {% if posts.has_other_pages %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% if posts.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.previous_page_number }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Trang Trước</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for i in posts.paginator.page_range %}
+        {% if posts.number == i %}
+          <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(hiện tại)</span></a></li>
+        {% else %}
+          {% if posts.number <= 3 and i <= 5 %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}">{{ i }}</a></li>
+          {% elif posts.number > 3 and i >= posts.number|add:"-2" and i <= posts.number|add:"2" %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}">{{ i }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      {% if posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ posts.next_page_number }}{% if view_mode == 'danh_sach' %}&view_mode=danh_sach{% endif %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Trang Tiếp</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+
+
+{% endblock %}
+
+{% block sidebar %}
+<div class="card bold mb-3">
+  <div class="card-body shadow">
+      <h5 class="card-title"><i class="fas fa-filter"></i> Bộ Lọc</h5>
+      <form action="." method="get" id="sort-by-form">
+        <div class="form-group">
+          <label for="sort-by">Sắp xếp theo:</label>
+          <select class="form-control" id="sort-by" name="sort_by">
+            <option value="date_newest">Ngày đăng (mới nhất)</option>
+            <option value="date_oldest">Ngày đăng (cũ nhất)</option>
+            <option value="likes_desc">Số lượt thích (giảm dần)</option>
+            <option value="likes_asc">Số lượt thích (tăng dần)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Xem</button>
+      </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/viewMode1.js' %}"></script>
+{% endblock %}

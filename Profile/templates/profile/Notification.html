@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Thông Báo{% endblock %}
+{% block content %}
+<h3><i class="fas fa-bell"></i> Thông báo của bạn</h3>
+
+<div class="card">
+    <div class="card-header">
+      <h5 class="card-title">Danh sách thông báo</h5>
+    </div>
+    <div class="card-body">
+      {% for noti in notifications %}
+      <div class="card mb-2">
+        <div class="card-body">
+            <h6 class="card-title">{{ noti.title }}</h6>
+            <p class="card-text">{{ noti.content }}</p>
+            <p class="card-text"><small class="text-muted">{{ noti.createdAt|date:"G\:i d/m/Y" }}</small></p>
+            {% if noti.link %}
+                <a href="{{ noti.link }}" target="_blank" class="btn btn-primary">Xem thêm</a>
+            {% endif %}
+            <a href="/profile/notification/delete?id={{noti.id}}" class="btn btn-danger">xóa</a>
+        </div>        
+      </div>
+      {% empty %}
+      <p>Không có thông báo</p>
+      {% endfor %}
+    </div>
+  </div>  
+<div class="mt-3">
+  <!-- pagination  -->
+  {% if notifications.has_other_pages %}
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      {% if notifications.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ notifications.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Trang Trước</span>
+          </a>
+        </li>
+      {% endif %}
+      {% for i in notifications.paginator.page_range %}
+        {% if notifications.number == i %}
+          <li class="page-item active"><a class="page-link" href="#">{{ i }} <span class="sr-only">(hiện tại)</span></a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if notifications.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ notifications.next_page_number }}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Trang Tiếp</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}
